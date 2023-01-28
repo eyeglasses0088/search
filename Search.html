@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+            <html lang="en">
+            
+            <head>
+                <meta charset="UTF-8">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>預約狀態查詢</title>
+            
+                <!-- 連結Bootstrap -->
+            
+                <!-- CSS only -->
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+                <!-- JavaScript Bundle with Popper -->
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+            
+            
+                <script>
+                    //  避免表單有空白的錯誤
+            
+                    function preventFormSubmit() {
+                        var forms = document.querySelectorAll('form');
+                        for (var i = 0; i < forms.length; i++) {
+                            forms[i].addEventListener('submit', function(event) {
+                                event.preventDefault();
+                            });
+                        }
+            
+                    }
+                    window.addEventListener("load", preventFormSubmit, true);
+            
+                    // 顯示表格內容
+            
+                    function createTable(dataArray) {
+                        if (dataArray && dataArray !== undefined && dataArray.length != 0) {
+            
+                            var result = "<table class='table table-sm table-striped' id='dtable' style='font-size:9px'>" +
+                                "<thead style='white-space: nowrap'>" +
+                                "<tr>" + //Change table headings to match witht he Google Sheet
+                                "<th scope='col'> _______________預約日期/班別________________   </th>" +
+                                "<th scope='col'>診別</th>" +
+                                "<th scope='col'>兒控檢查人數</th>" +
+                                "<th scope='col'>  第1位姓名 </th>" +
+                                "<th scope='col'>  第1位生日 </th>" +
+                                "<th scope='col'>  第2位姓名 </th>" + 
+                                "<th scope='col'>  第2位生日 </th>" +
+                                "<th scope='col'>  第3位姓名 </th>" +
+                                "<th scope='col'>  第3位生日 </th>" +
+                                "<th scope='col'>其他非兒控家人</th>" +
+                                "<th scope='col'>預約號碼</th>" +
+                                "號碼在最右邊→"+
+
+
+                                "</tr>" +
+                                "</thead>";
+                            for (var i = 0; i < dataArray.length; i++) {
+                                result += "<tr>";
+                                for (var j = 0; j < dataArray[i].length; j++) {
+                                    result += "<td>" + dataArray[i][j] + "</td>";
+                                }
+                                result += "</tr>";
+                            }
+                            result += "</table>";
+                            var div = document.getElementById('search-results');
+                            div.innerHTML = result;
+            
+            
+                        } else {
+            
+                            var div = document.getElementById('search-results');
+                            div.innerHTML = "沒有預約資料，請檢查錯字或詢問專人，謝謝!";
+                        }
+                    }
+            
+                    // 連結Google Script　並且顯示資料
+            
+                    function handleFormSubmit(formObject) {
+                        google.script.run.withSuccessHandler(createTable).submitForm(formObject);
+                        document.getElementById("search-form").reset();
+                    }
+                </script>
+            
+            </head>
+            
+            <body>
+            
+                <br>
+                <br>
+                <h3 style="text-align: center;">--預約狀態查詢--</h3>
+                <h5 style="text-align: center;">___________________________</h5>
+                <h5 style="text-align: center;">輸入預約兒控檢查姓名，即可點選查詢</h5>
+                <h5 style="text-align: center;">如網路較慢，送出查詢可能需5~10秒</h5>
+                <h5 style="text-align: center;">請您多加等候，謝謝!</h5>
+                <h5 style="text-align: center;" ><font color="red">★請確認日期是否正確★</font></h5>
+                <h5 style="text-align: center;" ><font color="#000097">★如日期錯誤可能表單有選錯★</font></h5>
+                <h5 style="text-align: center;" ><font color="#000097">請再重送，謝謝</font></h5>
+                <br>
+                
+                
+                
+
+                <br>
+                <!--搜尋表單  -->
+            
+                <div class="container">
+            
+                    <div class="row">
+            
+            
+                        <form id="search-form" class="form-inline" onsubmit="handleFormSubmit(this)">
+            
+                            <input style="width:50%;text-align: center;" type="text" id="searchtext" name="searchtext"     placeholder="輸入姓名並查詢">
+            
+                            <button type="submit" class="btn btn-success">查詢</button>
+                        </form>
+            
+            
+                    </div>
+            
+                    <!-- 表格要顯示的地方 -->
+                    <div class="row">
+            
+                        <div id="search-results" class="table-reponsive">
+                            
+                        </div>
+            
+                    </div>
+                    
+            
+                </div>
+                <h6 style="text-align: center;" ><font color="red">---------------------------</font></h6>
+                <h5 style="text-align: center;" ><font color="red">--院長診建議報到時間--</font></h5> 
+                <h6 style="text-align: center;"><font color="#000097">早診</font></h6>
+                <h6 style="text-align: center;"><font color="#000097">(30~35號 09:10到場)</font></h6>
+                <h6 style="text-align: center;"><font color="#000097">(36~40號 09:40到場)</font></h6>
+                <h6 style="text-align: center;"><font color="#000097">(41~45號 10:20到場)</font></h6>
+                <h6 style="text-align: center;"><font color="#000097">(46以上  11:00到場)</font></h6>
+
+                <h6 style="text-align: center;"><font color="D94600">晚診</font></h6>
+                <h6 style="text-align: center;"><font color="D94600">(30~35號 18:10到場)</font></h6>
+                <h6 style="text-align: center;"><font color="D94600">(36~40號 18:40到場)</font></h6>
+                <h6 style="text-align: center;"><font color="D94600">(41~45號 19:20到場)</font></h6>
+                <h6 style="text-align: center;"><font color="D94600">(46以上  20:00到場)</font></h6>
+                <h6 style="text-align: center;"><font color="red">-----------------------------</font></h6>
+                <h6 style="text-align: center;"><font color="red">可查詢即時服務號碼並預抓時間</font></h6>
+                <h6 style="text-align: center;"><font color="red">過號等待時間可能更長</font></h6>
+                <h6 style="text-align: center;"><font color="red">報到時間僅供參考</font></h6>
+                <h6 style="text-align: center;"><font color="red">因他人診察項目不同可能改變</font></h6>
+            </body>
+            
+            </html>
